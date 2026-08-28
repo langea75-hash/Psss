@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>Psss 🤫</title>
+<style>
+:root{
+  --bg:#f4f5f7;
+  --panel:#ffffff;
+  --text:#171717;
+  --muted:#6f7680;
+  --line:#d9dde3;
+  --accent:#202124;
+  --soft:#eef1f5;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:var(--bg);
+  color:var(--text)
+}
+button,input{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+.page{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px
+}
+.auth-card{
+  width:min(100%,430px);
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:30px;
+  box-shadow:0 16px 48px rgba(0,0,0,.08)
+}
+.brand{
+  font-size:46px;
+  font-weight:900;
+  text-align:center;
+  letter-spacing:-1px
+}
+.subtitle{
+  text-align:center;
+  color:var(--muted);
+  margin:8px 0 24px
+}
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  background:var(--soft);
+  padding:5px;
+  border-radius:14px;
+  margin-bottom:22px
+}
+.tab{
+  border:0;
+  background:transparent;
+  border-radius:10px;
+  padding:12px;
+  font-weight:800;
+  color:var(--muted)
+}
+.tab.active{
+  background:#fff;
+  color:var(--text);
+  box-shadow:0 2px 8px rgba(0,0,0,.08)
+}
+.form{
+  display:grid;
+  gap:16px
+}
+label{
+  display:grid;
+  gap:7px;
+  font-weight:750
+}
+input{
+  width:100%;
+  padding:14px 15px;
+  border:2px solid #aeb5bf;
+  border-radius:13px;
+  background:#fff;
+  color:#111;
+  outline:none
+}
+input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(32,33,36,.12)
+}
+.primary,.ghost,.side-actions button,.dialog-actions button{
+  border:0;
+  border-radius:11px;
+  padding:11px 14px;
+  font-weight:800
+}
+.primary{
+  background:var(--accent);
+  color:#fff
+}
+.ghost{
+  background:transparent;
+  color:var(--text);
+  border:1px solid var(--line)
+}
+.status{
+  min-height:24px;
+  text-align:center;
+  color:#b42318
+}
+.hint{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.4
+}
+.topbar{
+  height:70px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px
+}
+.topbar-title{
+  display:grid
+}
+.topbar-title small{
+  color:var(--muted)
+}
+.app-grid{
+  display:grid;
+  grid-template-columns:320px 1fr;
+  height:calc(100vh - 70px)
+}
+.sidebar{
+  background:#fff;
+  border-right:1px solid var(--line);
+  overflow:auto
+}
+.side-head{
+  padding:16px
+}
+.side-head h2{
+  margin:0 0 10px
+}
+.side-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap
+}
+.side-actions button{
+  background:var(--accent);
+  color:#fff
+}
+.chat-list{
+  border-top:1px solid var(--line)
+}
+.chat-item{
+  padding:14px 16px;
+  border-bottom:1px solid var(--line);
+  cursor:pointer
+}
+.chat-item:hover,.chat-item.active{
+  background:#f0f2f5
+}
+.chat-item strong{
+  display:block
+}
+.meta{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px
+}
+.chat-area{
+  min-width:0
+}
+.empty{
+  height:100%;
+  display:grid;
+  place-content:center;
+  text-align:center;
+  color:var(--muted);
+  padding:24px
+}
+.empty h2{
+  margin:4px 0;
+  color:var(--text)
+}
+.empty-emoji{
+  font-size:56px
+}
+.chat-panel{
+  height:100%;
+  display:grid;
+  grid-template-rows:auto 1fr auto
+}
+.chat-head{
+  padding:14px 18px;
+  background:#fff;
+  border-bottom:1px solid var(--line)
+}
+.chat-head h2{
+  margin:0
+}
+.chat-head small{
+  color:var(--muted)
+}
+.messages{
+  overflow:auto;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px
+}
+.message{
+  max-width:76%;
+  padding:10px 13px;
+  border-radius:17px;
+  background:#e5e7eb
+}
+.message.mine{
+  align-self:flex-end;
+  background:var(--accent);
+  color:#fff
+}
+.sender{
+  font-size:11px;
+  font-weight:800;
+  margin-bottom:3px
+}
+.time{
+  font-size:10px;
+  opacity:.65;
+  text-align:right;
+  margin-top:4px
+}
+.composer{
+  display:grid;
+  grid-template-columns:1fr 50px;
+  gap:10px;
+  padding:12px;
+  background:#fff;
+  border-top:1px solid var(--line)
+}
+.send{
+  border:0;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  font-size:20px
+}
+dialog{
+  border:0;
+  border-radius:18px;
+  padding:0
+}
+dialog::backdrop{
+  background:rgba(0,0,0,.55)
+}
+.dialog-form{
+  padding:22px;
+  min-width:min(380px,86vw);
+  display:grid;
+  gap:14px
+}
+.dialog-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px
+}
+.dialog-actions button{
+  background:var(--soft)
+}
+.dialog-actions .primary{
+  background:var(--accent);
+  color:#fff
+}
+@media(max-width:760px){
+  .app-grid{
+    grid-template-columns:1fr;
+    height:auto
+  }
+  .sidebar{
+    border-right:0;
+    border-bottom:1px solid var(--line);
+    max-height:42vh
+  }
+  .chat-area{
+    height:50vh
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="authPage" class="page">
+  <section class="auth-card">
+    <div class="brand">Psss 🤫</div>
+    <p class="subtitle">Privater Messenger nur per Einladung.</p>
+
+    <div class="tabs">
+      <button id="loginTab" class="tab active" type="button">Anmelden</button>
+      <button id="registerTab" class="tab" type="button">Registrieren</button>
+    </div>
+
+    <form id="loginForm" class="form">
+      <label>Benutzername
+        <input id="loginUser" required autocomplete="username">
+      </label>
+      <label>PIN
+        <input id="loginPin" type="password" inputmode="numeric" minlength="4" maxlength="8" required>
+      </label>
+      <button class="primary" type="submit">Anmelden</button>
+    </form>
+
+    <form id="registerForm" class="form hidden">
+      <label>Dein Name
+        <input id="displayName" required maxlength="40">
+      </label>
+      <label>Benutzername
+        <input id="registerUser" required maxlength="24">
+      </label>
+      <label>PIN
+        <input id="registerPin" type="password" inputmode="numeric" minlength="4" maxlength="8" required>
+      </label>
+      <label>Einladungscode
+        <input id="inviteCode" value="PSSS-2026" required>
+      </label>
+      <button class="primary" type="submit">Registrieren</button>
+    </form>
+
+    <p id="status" class="status"></p>
+    <p class="hint">Einladungscode zum Testen: <strong>PSSS-2026</strong></p>
+  </section>
+</div>
+
+<div id="appPage" class="hidden">
+  <header class="topbar">
+    <div class="topbar-title">
+      <strong>Psss 🤫</strong>
+      <small id="me"></small>
+    </div>
+    <button id="logoutBtn" class="ghost" type="button">Abmelden</button>
+  </header>
+
+  <div class="app-grid">
+    <aside class="sidebar">
+      <div class="side-head">
+        <h2>Chats</h2>
+        <div class="side-actions">
+          <button id="friendBtn" type="button">+ Freund</button>
+          <button id="groupBtn" type="button">+ Gruppe</button>
+        </div>
+      </div>
+      <div id="chatList" class="chat-list"></div>
+    </aside>
+
+    <main class="chat-area">
+      <div id="emptyChat" class="empty">
+        <div class="empty-emoji">🤫</div>
+        <h2>Wähle einen Chat</h2>
+        <p>Oder erstelle eine Gruppe.</p>
+      </div>
+
+      <section id="chatPanel" class="chat-panel hidden">
+        <div class="chat-head">
+          <div>
+            <h2 id="chatTitle"></h2>
+            <small id="chatMeta"></small>
+          </div>
+        </div>
+
+        <div id="messages" class="messages"></div>
+
+        <form id="messageForm" class="composer">
+          <input id="messageInput" maxlength="500" placeholder="Nachricht schreiben …">
+          <button type="submit" class="send">➤</button>
+        </form>
+      </section>
+    </main>
+  </div>
+</div>
+
+<dialog id="friendDialog">
+  <form method="dialog" class="dialog-form">
+    <h3>Freund hinzufügen</h3>
+    <label>Name
+      <input id="friendName" required maxlength="40">
+    </label>
+    <div class="dialog-actions">
+      <button value="cancel" type="submit">Abbrechen</button>
+      <button id="saveFriendBtn" type="button" class="primary">Hinzufügen</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="groupDialog">
+  <form method="dialog" class="dialog-form">
+    <h3>Gruppe erstellen</h3>
+    <label>Gruppenname
+      <input id="groupName" required maxlength="50">
+    </label>
+    <label>Mitglieder
+      <input id="groupMembers" placeholder="z. B. Steffi, Martin">
+    </label>
+    <p class="hint">Mehrere Namen mit Komma trennen.</p>
+    <div class="dialog-actions">
+      <button value="cancel" type="submit">Abbrechen</button>
+      <button id="saveGroupBtn" type="button" class="primary">Erstellen</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const get=(k,f)=>{try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}};
+const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let currentUser=null,activeChat=null;
+
+const users=()=>get("psss_one_users",[]);
+const chats=()=>get(`psss_one_chats_${currentUser}`,[]);
+const saveChats=v=>set(`psss_one_chats_${currentUser}`,v);
+const messages=id=>get(`psss_one_messages_${currentUser}_${id}`,[]);
+const saveMessages=(id,v)=>set(`psss_one_messages_${currentUser}_${id}`,v);
+
+function esc(s){
+  const d=document.createElement("div");
+  d.textContent=s;
+  return d.innerHTML;
+}
+
+function setTab(which){
+  const login=which==="login";
+  $("#loginForm").classList.toggle("hidden",!login);
+  $("#registerForm").classList.toggle("hidden",login);
+  $("#loginTab").classList.toggle("active",login);
+  $("#registerTab").classList.toggle("active",!login);
+  $("#status").textContent="";
+  $("#status").style.color="#b42318";
+}
+$("#loginTab").onclick=()=>setTab("login");
+$("#registerTab").onclick=()=>setTab("register");
+
+$("#registerForm").onsubmit=e=>{
+  e.preventDefault();
+
+  const displayName=$("#displayName").value.trim();
+  const username=$("#registerUser").value.trim().toLowerCase();
+  const pin=$("#registerPin").value.trim();
+  const invite=$("#inviteCode").value.trim();
+
+  if(invite!=="PSSS-2026")
+    return $("#status").textContent="Einladungscode ist falsch.";
+
+  if(!/^[a-z0-9._-]{3,24}$/i.test(username))
+    return $("#status").textContent="Benutzername: 3–24 Zeichen.";
+
+  if(!/^\d{4,8}$/.test(pin))
+    return $("#status").textContent="PIN: 4–8 Ziffern.";
+
+  const list=users();
+
+  if(list.some(u=>u.username===username))
+    return $("#status").textContent="Benutzername ist bereits vergeben.";
+
+  list.push({displayName,username,pin});
+  set("psss_one_users",list);
+
+  $("#loginUser").value=username;
+  $("#loginPin").value=pin;
+  setTab("login");
+  $("#status").style.color="#16803a";
+  $("#status").textContent="Registrierung erfolgreich. Jetzt anmelden.";
+};
+
+$("#loginForm").onsubmit=e=>{
+  e.preventDefault();
+
+  const username=$("#loginUser").value.trim().toLowerCase();
+  const pin=$("#loginPin").value.trim();
+
+  const user=users().find(
+    u=>u.username===username && u.pin===pin
+  );
+
+  if(!user){
+    $("#status").style.color="#b42318";
+    return $("#status").textContent="Benutzername oder PIN ist falsch.";
+  }
+
+  login(user);
+};
+
+function login(user){
+  currentUser=user.username;
+  set("psss_one_session",currentUser);
+
+  $("#authPage").classList.add("hidden");
+  $("#appPage").classList.remove("hidden");
+  $("#me").textContent=user.displayName||user.username;
+
+  if(!chats().length){
+    saveChats([
+      {
+        id:crypto.randomUUID(),
+        type:"friend",
+        name:"Testfreund",
+        members:["Testfreund"]
+      },
+      {
+        id:crypto.randomUUID(),
+        type:"group",
+        name:"Testgruppe",
+        members:[user.displayName||user.username,"Steffi","Martin"]
+      }
+    ]);
+  }
+
+  renderChats();
+}
+
+$("#logoutBtn").onclick=()=>{
+  localStorage.removeItem("psss_one_session");
+  location.reload();
+};
+
+function renderChats(){
+  $("#chatList").innerHTML=chats().map(c=>`
+    <div class="chat-item ${activeChat===c.id?"active":""}" data-id="${c.id}">
+      <strong>${esc(c.name)}</strong>
+      <div class="meta">
+        ${c.type==="group" ? `Gruppe · ${c.members.length} Mitglieder` : "Einzelchat"}
+      </div>
+    </div>
+  `).join("");
+
+  $$(".chat-item").forEach(
+    el=>el.onclick=()=>openChat(el.dataset.id)
+  );
+}
+
+function openChat(id){
+  activeChat=id;
+
+  const chat=chats().find(c=>c.id===id);
+
+  $("#emptyChat").classList.add("hidden");
+  $("#chatPanel").classList.remove("hidden");
+  $("#chatTitle").textContent=chat.name;
+  $("#chatMeta").textContent=
+    chat.type==="group"
+      ? chat.members.join(", ")
+      : "Einzelchat";
+
+  renderMessages();
+  renderChats();
+}
+
+function renderMessages(){
+  const chat=chats().find(c=>c.id===activeChat);
+
+  $("#messages").innerHTML=messages(activeChat).map(m=>`
+    <div class="message ${m.mine?"mine":""}">
+      ${
+        chat?.type==="group"
+          ? `<div class="sender">${esc(m.sender||"")}</div>`
+          : ""
+      }
+      <div>${esc(m.text)}</div>
+      <div class="time">${esc(m.time)}</div>
+    </div>
+  `).join("");
+
+  $("#messages").scrollTop=$("#messages").scrollHeight;
+}
+
+$("#messageForm").onsubmit=e=>{
+  e.preventDefault();
+
+  const text=$("#messageInput").value.trim();
+
+  if(!text || !activeChat) return;
+
+  const list=messages(activeChat);
+  const me=users().find(u=>u.username===currentUser);
+
+  list.push({
+    text,
+    mine:true,
+    sender:me?.displayName||currentUser,
+    time:new Date().toLocaleTimeString(
+      "de-DE",
+      {hour:"2-digit",minute:"2-digit"}
+    )
+  });
+
+  saveMessages(activeChat,list);
+  $("#messageInput").value="";
+  renderMessages();
+};
+
+$("#friendBtn").onclick=()=>{
+  $("#friendDialog").showModal();
+};
+
+$("#saveFriendBtn").onclick=()=>{
+  const name=$("#friendName").value.trim();
+
+  if(!name) return;
+
+  const list=chats();
+
+  list.push({
+    id:crypto.randomUUID(),
+    type:"friend",
+    name,
+    members:[name]
+  });
+
+  saveChats(list);
+  $("#friendName").value="";
+  $("#friendDialog").close();
+  renderChats();
+};
+
+$("#groupBtn").onclick=()=>{
+  $("#groupDialog").showModal();
+};
+
+$("#saveGroupBtn").onclick=()=>{
+  const name=$("#groupName").value.trim();
+
+  if(!name) return;
+
+  const me=users().find(u=>u.username===currentUser);
+  const myName=me?.displayName||currentUser;
+
+  const members=$("#groupMembers").value
+    .split(",")
+    .map(x=>x.trim())
+    .filter(Boolean);
+
+  if(!members.includes(myName))
+    members.unshift(myName);
+
+  const list=chats();
+
+  list.push({
+    id:crypto.randomUUID(),
+    type:"group",
+    name,
+    members
+  });
+
+  saveChats(list);
+
+  $("#groupName").value="";
+  $("#groupMembers").value="";
+  $("#groupDialog").close();
+  renderChats();
+};
+
+const session=get("psss_one_session",null);
+
+if(session){
+  const user=users().find(u=>u.username===session);
+  if(user) login(user);
+}
+</script>
+</body>
+</html>
